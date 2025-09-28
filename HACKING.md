@@ -91,6 +91,10 @@ especially if you're getting a weird type error that seems wrong, give a shot ju
 
 for main content included in a page, we use `enhanced:img` wherever possible, including with a hero image optionall specified in the frontmatter of blog posts. however, it s
 
+### Quirks with Apache
+
+On moving to MFM hosting, we ran into an issue with our build output not matching the directory structure that Apache expects. We fixed that by enabling this https://svelte.dev/docs/kit/page-options#trailingSlash
+
 ### Useful links
 
 action network css examples
