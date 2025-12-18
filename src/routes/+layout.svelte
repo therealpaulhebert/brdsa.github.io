@@ -21,15 +21,27 @@
 		const posts = await fetch("/search.json").then((res) => res.json());
 		createPostsIndex(posts);
 		search = "ready";
+	});
 
+	const watchPopoverToggle = (e: Event) => {
 		const popover = document.getElementById("searchbox");
-		popover?.addEventListener("toggle", (event) => {
-			if (event.newState === "open") {
-				const input = document.getElementById("searchTerm");
-				input?.focus();
+		popover?.addEventListener("toggle", (e) => {
+			if (e.newState === "open") {
+				const searchInput = document.getElementById("searchInput");
+				searchInput?.focus();
+				//Experimental option to force browser to show its focus. 
+				searchInput?.focus({ focusVisible: true});
+			} else {
+				searchTerm = "";
 			}
 		});
-	});
+	};
+
+	const clearSearch = () => {
+		searchTerm = "";
+		const popover = document.getElementById("searchbox");
+		popover?.hidePopover();
+	}
 
 	$effect(() => {
 		if (search === "ready") {
@@ -37,19 +49,8 @@
 			results = searchPostsIndex(searchTerm);
 		}
 	});
-
-	function toggleSearch() {
-		const popover = document.getElementById("searchbox");
-		const isOpen = popover?.togglePopover();
-		if (isOpen) {
-			const input = document.getElementById("searchTerm");
-			input?.focus();
-		}
-
-		searchTerm = "";
-	}
 </script>
-
+<svelte:window onload={watchPopoverToggle}></svelte:window>
 <svelte:head>
 	<title>{data.title}</title>
 	<meta name="description" content={data.description} />
@@ -76,6 +77,7 @@
 					>Home</a
 				>
 			</li>
+			{#if search === "ready"}
 			<li class="searchIcon">
 				<button
 					popovertarget="searchbox"
@@ -89,6 +91,7 @@
 					></div>
 				</button>
 			</li>
+			{/if}
 			{#each data.sections as { title, link, caption }}
 				<li>
 					<a href={link} class="group font-bold text-dsa-red dark:text-dsa-red1" title={caption}>
@@ -103,8 +106,8 @@
 	</nav>
 </header>
 <main class="flex grow">
-	{#if search === "ready"}
-		<div id="searchbox" popover>
+	
+		<div id="searchbox" popover="auto">
 			<div class="search">
 				<p class="instructions">
 					Search <img src={pageIcon} alt="Page Icon" />Statements and
@@ -116,8 +119,8 @@
 					autocomplete="off"
 					spellcheck="false"
 					type="search"
-					id="searchTerm"
-					name="searchTerm"
+					id="searchInput"
+					name="searchInput"
 					class="rounded-sm p-1 ring-1 ring-dsa-red1 focus:border-dsa-red1 focus:ring-2 focus:outline-none"
 				/>
 
@@ -126,7 +129,7 @@
 						<ul>
 							{#each results as result}
 								<li>
-									<a href={result.slug} onclick={toggleSearch}>
+									<a href={result.slug} onclick={clearSearch}>
 										<h3>
 											{#if "Statement" == result.category}
 												<img src={pageIcon} alt="Page Icon" />
@@ -145,7 +148,7 @@
 				</div>
 			</div>
 		</div>
-	{/if}
+
 	{@render children()}
 </main>
 <footer>
