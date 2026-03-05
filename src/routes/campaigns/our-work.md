@@ -1,3 +1,9 @@
+---
+title: Our Work
+date: 2026-01-19
+description: Information about Baton Rouge DSA's work and campaigns
+author: BRDSA
+---
 We're building a [page of relevant resources here](/campaigns/resources).
 
 ## 🏠⚖️ Tenant Rights 

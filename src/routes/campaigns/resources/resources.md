@@ -1,3 +1,9 @@
+---
+title: Chapter Resources
+date: 2026-01-20
+description: Resources for Baton Rouge DSA's work and campaigns, including links, handouts, brochures
+author: BRDSA
+---
 # Materials, resources, and links
 
 Below are some resources produced by our chapter. We're working on improving this area, so please be sure to check back later. 

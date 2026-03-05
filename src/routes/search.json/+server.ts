@@ -7,7 +7,8 @@ const patterns: Record<string, RegExp> = {
 	frontmatter: /---.*?---/gs,
 	code: /```.*?\n|```/gs,
 	inline: /`([^`]*)`/g,
-	heading: /^#{1,6}\s.*$/gm,
+	/* heading: /^#{1,6}\s.*$/gm, */
+	heading: /^#{1,6}\s/gm,
 	link: /\[([^\]]+)\]\(([^)]+)\)/g,
 	image: /!\[.*?\]\(.*?\)/g,
 	blockquote: /> /gm,
@@ -74,6 +75,66 @@ export async function GET() {
 			})
 			.filter(Boolean);
 
+		const CampaignsPath = import.meta.glob("/src/routes/campaigns/our-work.md", {
+			import: "default",
+			query: "?raw",
+			eager: true
+		});
+		const CampaignsItems = Object.entries(CampaignsPath)
+		.map(([k,content]) => {
+			const frontmatter = matter(content as string);
+			if (!frontmatter.data.hidden) {
+				return {
+					category: "Campaigns",
+					title: frontmatter.data.title,
+					slug: "/campaigns/",
+					description: "BRDSA's Work and Campaigns",
+					text: stripMarkdown(content as string)
+				}
+			}
+		})
+		.filter(Boolean);
+
+		const ResourcesPath = import.meta.glob("/src/routes/campaigns/resources/resources.md", {
+			import:"default",
+			query: "?raw",
+			eager: true
+		});
+		const ResourceItem = Object.entries(ResourcesPath)
+			.map(([k, content]) => {
+				const frontmatter = matter(content as string);
+				if(!frontmatter.data.hidden) {
+					return {
+						category: "Campaigns",
+						title: frontmatter.data.title,
+						slug: "/campaigns/resources/",
+						description: "Resources for BRDSA's Work and Campaigns",
+						text: stripMarkdown(content as string)
+					}
+				}
+			})
+			.filter(Boolean);
+
+		const FitePath = import.meta.glob("/src/routes/fite/fite.md", {
+			import:"default",
+			query: "?raw",
+			eager: true
+		});
+		const FiteItem = Object.entries(FitePath)
+			.map(([k, content]) => {
+				const frontmatter = matter(content as string);
+				if(!frontmatter.data.hidden) {
+					return {
+						category: "Campaigns",
+						title: frontmatter.data.title,
+						slug: "/fite/",
+						description: "BRDSA Campaign - FITE - Famine is the Enemy",
+						text: stripMarkdown(content as string)
+					}
+				}
+			})
+			.filter(Boolean);
+
 		const recipePath = import.meta.glob("/src/lib/posts/recipes/*.md", {
 			import: "default",
 			query: "?raw",
@@ -102,6 +163,21 @@ export async function GET() {
 		recipes.forEach((r) => {
             if(r)
 			    fulllist.push(r);
+		});
+
+		CampaignsItems.forEach((r) => {
+			if(r)
+				fulllist.push(r);
+		});
+
+		ResourceItem.forEach((r) => {
+			if(r)
+				fulllist.push(r);
+		});
+
+		FiteItem.forEach((r) => {
+			if(r)
+				fulllist.push(r);
 		});
 
 		return json(fulllist);

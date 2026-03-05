@@ -11,6 +11,7 @@
 	import { onMount } from "svelte";
 	import { createPostsIndex, searchPostsIndex } from "$lib/search";
 	import pageIcon from "$lib/images/file-lines-regular-full-white.svg";
+	import peopleIcon from "$lib/images/people-line-white.svg";
 	import foodIcon from "$lib/images/bowl-rice-solid-full-white.svg";
 
 	let search: "loading" | "ready" = $state("loading");
@@ -110,8 +111,9 @@
 		<div id="searchbox" popover="auto">
 			<div class="search">
 				<p class="instructions">
-					Search <img src={pageIcon} alt="Page Icon" />Statements and
-					<img src={foodIcon} alt="Food Icon" />Recipes
+					Search <img src={pageIcon} alt="Page Icon" />Statements,
+					<img src={foodIcon} alt="Food Icon" />Recipes, and
+					<img src={peopleIcon} alt="People Icon" /> Campaign information
 				</p>
 				<input
 					bind:value={searchTerm}
@@ -133,8 +135,10 @@
 										<h3>
 											{#if "Statement" == result.category}
 												<img src={pageIcon} alt="Page Icon" />
-											{:else}
+											{:else if result.category == "Recipe"} 
 												<img src={foodIcon} alt="Food Icon" />
+											{:else}
+												<img src={peopleIcon} alt="People Icon" />
 											{/if}
 											<b>{@html result.category}:</b>
 											{@html result.title}
